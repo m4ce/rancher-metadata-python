@@ -26,7 +26,7 @@ class MetadataAPI:
       containers = t
 
       if (len(containers) < scale):
-        sleep(0.5)
+        time.sleep(0.5)
       else:
         break
 
