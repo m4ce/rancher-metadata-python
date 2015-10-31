@@ -3,6 +3,13 @@ This is a simple Python API that allows to interact with the Rancher Metadata RE
 
 Pull requests to add additional API features (as documented at http://docs.rancher.com/rancher/metadata-service/) are very welcome. I only implemented what I needed.
 
+## Install
+To install it simply issue the following command:
+
+```
+pip install rancher_metadata
+```
+
 ## Usage
 ```
 from rancher_metadata import MetadataAPI
