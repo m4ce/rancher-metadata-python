@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import re
 
 class MetadataAPI:
   def __init__(self, **kwargs):
