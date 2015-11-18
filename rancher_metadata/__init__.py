@@ -77,3 +77,20 @@ class MetadataAPI:
       return self.api_get("/self/container/hostname")
     else:
       return self.api_get("/containers/" + container + "/hostname")
+
+  def get_container_service_id(self, container = None):
+    index = None
+
+    if container is None:
+      index = self.api_get("/self/container/service_index")
+    else:
+      index = self.api_get("/containers/" + container + "/service_index")
+
+    if isinstance(index, dict):
+      m = re.search("(\d+)$", self.get_container_name(container))
+      if m:
+        index = m.group(1)
+      else:
+        index = None
+
+    return index
