@@ -48,6 +48,12 @@ class MetadataAPI:
       return self.api_get("/self/service/metadata")
     else:
       return self.api_get("/services/" + service + "/metadata")
+  
+  def get_service_links(self, service = None):
+    if service is None:
+      return self.api_get("/self/service/links")
+    else:
+      return self.api_get("/services/" + service + "/links")
 
   def get_container_id(self, container = None):
     if container is None:
