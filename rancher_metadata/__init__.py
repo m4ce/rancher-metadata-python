@@ -75,7 +75,7 @@ class MetadataAPI:
   def get_container_ip(self, container = None):
     if container is None:
       # are we running within the rancher managed network?
-      if is_network_managed():
+      if self.is_network_managed():
         return self.api_get("/self/container/primary_ip")
       else:
         return self.get_host_ip()
