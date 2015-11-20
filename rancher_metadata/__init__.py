@@ -42,6 +42,9 @@ class MetadataAPI:
       else:
         break
 
+  def get_services(self):
+    return self.api_get("/services")
+
   def get_service_scale_size(self, service = None):
     if service is None:
       return self.api_get("/self/service/scale")
@@ -65,6 +68,12 @@ class MetadataAPI:
       return self.api_get("/self/service/links")
     else:
       return self.api_get("/services/" + service + "/links")
+
+  def get_stacks(self):
+    return self.api_get("/stacks")
+
+  def get_containers(self):
+    return self.api_get("/containers")
 
   def get_container_id(self, container = None):
     if container is None:
@@ -125,8 +134,23 @@ class MetadataAPI:
     else:
       return False
 
+  def get_hosts(self):
+    return self.api_get("/hosts")
+
   def get_host_ip(self, host = None):
     if host is None:
       return self.api_get("/self/host/agent_ip")
     else:
       return self.api_get("/hosts/" + host + "/agent_ip")
+
+  def get_host_uuid(self, host = None):
+    if host is None:
+      return self.api_get("/self/host/uuid")
+    else:
+      return self.api_get("/hosts/" + host + "/uuid")
+
+  def get_host_name(self, host = None):
+    if host is None:
+      return self.api_get("/self/host/name")
+    else:
+      return self.api_get("/hosts/" + host + "/name")
