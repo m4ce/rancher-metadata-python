@@ -120,12 +120,12 @@ class MetadataAPI:
   def is_network_managed(self):
     # in managed network, we don't get to see any information about the container :(
 
-    if self.is_error(self.get_container_id()):
-      return False
-    else:
+    if self.get_container_id():
       return True
+    else:
+      return False
 
-  def get_host_ip(self, host):
+  def get_host_ip(self, host = None):
     if host is None:
       return self.api_get("/self/host/agent_ip")
     else:
