@@ -126,6 +126,12 @@ class MetadataAPI:
 
     return index
 
+  def get_container_host_uuid(self, container = None):
+    if container is None:
+      return self.api_get("/self/container/host_uuid")
+    else:
+      return self.api_get("/containers/" + container + "/host_uuid")
+
   def is_network_managed(self):
     # in managed network, we don't get to see any information about the container :(
 
