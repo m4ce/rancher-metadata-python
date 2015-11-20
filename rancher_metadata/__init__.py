@@ -117,10 +117,10 @@ class MetadataAPI:
 
     return index
 
-  def is_network_managed():
+  def is_network_managed(self):
     # in managed network, we don't get to see any information about the container :(
 
-    if is_error(self.get_container_id()):
+    if self.is_error(self.get_container_id()):
       return False
     else:
       return True
