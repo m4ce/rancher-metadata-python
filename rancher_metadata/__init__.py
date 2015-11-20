@@ -117,12 +117,10 @@ class MetadataAPI:
     else:
       index = self.api_get("/containers/" + container + "/service_index")
 
-    if isinstance(index, dict):
+    if index is None:
       m = re.search("(\d+)$", self.get_container_name(container))
       if m:
         index = m.group(1)
-      else:
-        index = None
 
     return index
 
