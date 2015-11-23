@@ -118,7 +118,7 @@ class MetadataAPI:
       return self.api_get("/containers/" + container_name + "/" + field)
 
   def get_container_id(self, container_name = None):
-    self.get_container_field("create_index", container_name)
+    return self.get_container_field("create_index", container_name)
 
   def get_container_ip(self, container_name = None):
     if container_name is None:
@@ -131,13 +131,13 @@ class MetadataAPI:
       return self.api_get("/containers/" + container_name + "/primary_ip")
 
   def get_container_name(self, container_name = None):
-    self.get_container_field("name", container_name)
+    return self.get_container_field("name", container_name)
 
   def get_container_service_name(self, container_name = None):
-    self.get_container_field("service_name", container_name)
+    return self.get_container_field("service_name", container_name)
 
   def get_container_hostname(self, container_name = None):
-    self.get_container_field("hostname", container_name)
+    return self.get_container_field("hostname", container_name)
 
   def get_container_service_id(self, container_name = None):
     index = self.get_container_field("service_index", container_name)
@@ -177,10 +177,10 @@ class MetadataAPI:
       return self.api_get("/hosts/" + host_name + "/" + field)
 
   def get_host_ip(self, host_name = None):
-    self.get_host_field("agent_ip", host_name)
+    return self.get_host_field("agent_ip", host_name)
 
   def get_host_uuid(self, host_name = None):
-    self.get_host_field("uuid", host_name)
+    return self.get_host_field("uuid", host_name)
 
   def get_host_name(self, host_name = None):
-    self.get_host_field("name", host_name)
+    return self.get_host_field("name", host_name)
