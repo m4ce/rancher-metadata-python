@@ -136,6 +136,9 @@ class MetadataAPI:
   def get_container_service_name(self, container_name = None):
     return self.get_container_field("service_name", container_name)
 
+  def get_container_stack_name(self, container_name = None):
+    return self.get_container_field("stack_name", container_name)
+
   def get_container_hostname(self, container_name = None):
     return self.get_container_field("hostname", container_name)
 
@@ -151,7 +154,7 @@ class MetadataAPI:
     return index
 
   def get_container_host_uuid(self, container_name = None):
-    index = self.get_container_field("host_uuid", container_name)
+    return self.get_container_field("host_uuid", container_name)
 
   def is_network_managed(self):
     # in managed network, we don't get to see any information about the container :(
