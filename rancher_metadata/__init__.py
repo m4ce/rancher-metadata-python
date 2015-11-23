@@ -34,48 +34,54 @@ class MetadataAPI:
   def get_services(self):
     return self.api_get("/services")
 
-  def get_service(self, service_name = None, stack_name = None):
-    if service_name is None:
+  def get_service(self, **kwargs):
+    if not kwargs:
       return self.api_get("/self/service")
     else:
-      if stack_name is None:
-        return self.api_get("/services/" + service_name)
+      if 'service_name' not in kwargs:
+        raise ValueError("Attribute 'service_name' is required")
+
+      if 'stack_name' not in kwargs:
+        return self.api_get("/services/" + kwargs['service_name'])
       else:
         for s in self.get_services():
-          if s['stack_name'] == stack_name and s['service_name'] == service_name:
+          if s['stack_name'] == kwargs['stack_name'] and s['name'] == kwargs['service_name']:
             return s
 
-  def get_service_field(self, field, service_name, stack_name):
-    if service_name is None:
+  def get_service_field(self, field, **kwargs):
+    if not kwargs:
       return self.api_get("/self/service/" + field)
     else:
-      if stack_name is None:
-        return self.api_get("/services/" + service_name + "/" + field)
+      if 'service_name' not in kwargs:
+        raise ValueError("Attribute 'service_name' is required")
+
+      if 'stack_name' not in kwargs:
+        return self.api_get("/services/" + kwargs['service_name'] + "/" + field)
       else:
-        s = self.get_service(service_name, stack_name)
-        if field in s:
+        s = self.get_service(**kwargs)
+        if s and field in s:
           return s[field]
         else:
           return None
 
-  def get_service_scale_size(self, service_name = None, stack_name = None):
-    self.get_service_field("scale", service_name, stack_name)
+  def get_service_scale_size(self, **kwargs):
+    return self.get_service_field("scale", **kwargs)
 
-  def get_service_containers(self, service_name = None, stack_name = None):
-    self.get_service_field("containers", service_name, stack_name)
+  def get_service_containers(self, **kwargs):
+    return self.get_service_field("containers", **kwargs)
 
-  def get_service_metadata(self, service_name = None, stack_name = None):
-    self.get_service_field("metadata", service_name, stack_name)
+  def get_service_metadata(self, **kwargs):
+    return self.get_service_field("metadata", **kwargs)
 
-  def get_service_links(self, service_name = None, stack_name = None):
-    self.get_service_field("links", service_name, stack_name)
+  def get_service_links(self, **kwargs):
+    return self.get_service_field("links", **kwargs)
 
-  def wait_service_containers(self, service_name = None, stack_name = None):
-    scale = self.get_service_scale_size(service_name, stack_name)
+  def wait_service_containers(self, **kwargs):
+    scale = self.get_service_scale_size(**kwargs)
     containers = []
 
     while True:
-      t = self.get_service_containers(service_name, stack_name)
+      t = self.get_service_containers(**kwargs)
 
       for n in list(set(t) - set(containers)):
         yield n
