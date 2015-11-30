@@ -12,9 +12,17 @@ import re
 class MetadataAPI:
   def __init__(self, **kwargs):
     if 'api_url' not in kwargs:
-      self.api_url = "http://rancher-metadata/latest"
+      self.api_url = ["http://rancher-metadata/latest"]
     else:
-      self.api_url = kwargs['api_url']
+      if not isinstance(kwargs['api_url'], dict):
+        self.api_url = [kwargs['api_url']]
+      else:
+        self.api_url = kwargs['api_url']
+
+    if kwargs['max_attempts']:
+      self.max_attempts = kwargs['max_attempts']
+    else:
+      self.max_attempts = 3
 
   def is_error(self, data):
     if isinstance(data, dict):
@@ -24,7 +32,22 @@ class MetadataAPI:
     return False
 
   def api_get(self, query):
-    req = requests.get(self.api_url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json()
+    success = False
+    i = 1
+
+    while (i <= self.max_attempts and not success):
+      for url in self.api_url:
+        try:
+          req = requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json()
+          success = True
+          break
+        except Exception as e:
+          print("Failed to query Rancher Metadata API on " + url + " - Caught exception (" + str(e) + ")")
+
+      i = i + 1
+
+    if not success:
+      raise RuntimeError("Failed to query Rancher Metadata API (" + str(i) + " out of " + str(self.max_attempts) + " attempts failed)")
 
     if self.is_error(req):
       return None
