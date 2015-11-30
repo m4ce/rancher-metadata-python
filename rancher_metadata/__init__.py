@@ -19,7 +19,7 @@ class MetadataAPI:
       else:
         self.api_url = kwargs['api_url']
 
-    if kwargs['max_attempts']:
+    if 'max_attempts' in kwargs['max_attempts']:
       self.max_attempts = kwargs['max_attempts']
     else:
       self.max_attempts = 3
