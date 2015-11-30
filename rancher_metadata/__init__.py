@@ -14,12 +14,12 @@ class MetadataAPI:
     if 'api_url' not in kwargs:
       self.api_url = ["http://rancher-metadata/latest"]
     else:
-      if not isinstance(kwargs['api_url'], dict):
-        self.api_url = [kwargs['api_url']]
-      else:
+      if isinstance(kwargs['api_url'], dict):
         self.api_url = kwargs['api_url']
+      else:
+        self.api_url = [kwargs['api_url']]
 
-    if 'max_attempts' in kwargs['max_attempts']:
+    if 'max_attempts' in kwargs:
       self.max_attempts = kwargs['max_attempts']
     else:
       self.max_attempts = 3
