@@ -14,7 +14,7 @@ class MetadataAPI:
     if 'api_url' not in kwargs:
       self.api_url = ["http://rancher-metadata/latest"]
     else:
-      if isinstance(kwargs['api_url'], dict):
+      if isinstance(kwargs['api_url'], list):
         self.api_url = kwargs['api_url']
       else:
         self.api_url = [kwargs['api_url']]
