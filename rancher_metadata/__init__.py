@@ -166,13 +166,17 @@ class MetadataAPI:
     return self.get_container_field("hostname", container_name)
 
   def get_container_service_id(self, container_name = None):
-    index = self.get_container_field("service_index", container_name)
+    index = None
+
+    service_index = self.get_container_field("service_index", container_name)
 
     # use the container name index as the unique service index
-    if index is None:
+    if service_index is None:
       m = re.search("(\d+)$", self.get_container_name(container_name))
       if m:
-        index = m.group(1)
+        index = int(m.group(1))
+    else:
+      index = int(service_index)
 
     return index
 
