@@ -12,7 +12,7 @@ import re
 class MetadataAPI:
   def __init__(self, **kwargs):
     if 'api_url' not in kwargs:
-      self.api_url = ["http://rancher-metadata/latest"]
+      self.api_url = ["http://rancher-metadata/2015-07-25"]
     else:
       if isinstance(kwargs['api_url'], list):
         self.api_url = kwargs['api_url']
