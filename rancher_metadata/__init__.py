@@ -141,7 +141,7 @@ class MetadataAPI:
       return self.api_get("/containers/%s/%s" % (container_name, field))
 
   def get_container_id(self, container_name = None):
-    i = self.get_container_field("create_index", container_name))
+    i = self.get_container_field("create_index", container_name)
 
     if i:
       return int(i)
