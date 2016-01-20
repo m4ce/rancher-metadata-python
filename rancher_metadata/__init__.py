@@ -29,9 +29,9 @@ class MetadataAPI:
     if isinstance(h, basestring):
       return str(h)
     elif isinstance(h, dict):
-      return dict(map(unicode2hash, h.iteritems()))
+      return dict(map(no_unicode, h.iteritems()))
     elif isinstance(h, collections.Iterable):
-      return type(h)(map(unicode2hash, h))
+      return type(h)(map(no_unicode, h))
     else:
       return h
 
