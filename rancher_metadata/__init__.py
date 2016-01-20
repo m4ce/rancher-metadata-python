@@ -39,7 +39,8 @@ class MetadataAPI:
     while (i <= self.max_attempts and not success):
       for url in self.api_url:
         try:
-          req = no_unicode(requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json())
+          req = requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json()
+          data = self.no_unicode(req)
           success = True
           break
         except Exception as e:
@@ -50,10 +51,10 @@ class MetadataAPI:
     if not success:
       raise RuntimeError("Failed to query Rancher Metadata API (%d out of %d attempts failed)" % (i, self.max_attempts))
 
-    if self.is_error(req):
+    if self.is_error(data):
       return None
     else:
-      return req
+      return data
 
   def get_services(self):
     return self.api_get("/services")
@@ -221,13 +222,12 @@ class MetadataAPI:
   def get_host_name(self, host_name = None):
     return self.get_host_field("name", host_name)
 
-  @staticmethod
   def no_unicode(h):
     if isinstance(h, basestring):
       return str(h)
     elif isinstance(h, dict):
-      return dict(map(no_unicode, h.iteritems()))
+      return dict(map(self.no_unicode, h.iteritems()))
     elif isinstance(h, collections.Iterable):
-      return type(h)(map(no_unicode, h))
+      return type(h)(map(self.no_unicode, h))
     else:
       return h
