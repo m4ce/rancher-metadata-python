@@ -25,15 +25,15 @@ class MetadataAPI:
     else:
       self.max_attempts = 3
 
-  def hash_unicode2string(data):
-    if isinstance(data, basestring):
-      return str(data)
-    elif isinstance(data, dict):
-      return dict(map(unicode2hash, data.iteritems()))
-    elif isinstance(data, collections.Iterable):
-      return type(data)(map(unicode2hash, data))
+  def no_unicode(h):
+    if isinstance(h, basestring):
+      return str(h)
+    elif isinstance(h, dict):
+      return dict(map(unicode2hash, h.iteritems()))
+    elif isinstance(h, collections.Iterable):
+      return type(h)(map(unicode2hash, h))
     else:
-      return data
+      return h
 
   def is_error(self, data):
     if isinstance(data, dict):
@@ -49,7 +49,7 @@ class MetadataAPI:
     while (i <= self.max_attempts and not success):
       for url in self.api_url:
         try:
-          req = hash_unicode2string(requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json())
+          req = no_unicode(requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json())
           success = True
           break
         except Exception as e:
