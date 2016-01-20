@@ -25,16 +25,6 @@ class MetadataAPI:
     else:
       self.max_attempts = 3
 
-  def no_unicode(h):
-    if isinstance(h, basestring):
-      return str(h)
-    elif isinstance(h, dict):
-      return dict(map(no_unicode, h.iteritems()))
-    elif isinstance(h, collections.Iterable):
-      return type(h)(map(no_unicode, h))
-    else:
-      return h
-
   def is_error(self, data):
     if isinstance(data, dict):
       if 'code' in data and data['code'] == 404:
@@ -230,3 +220,14 @@ class MetadataAPI:
 
   def get_host_name(self, host_name = None):
     return self.get_host_field("name", host_name)
+
+  @staticmethod
+  def no_unicode(h):
+    if isinstance(h, basestring):
+      return str(h)
+    elif isinstance(h, dict):
+      return dict(map(no_unicode, h.iteritems()))
+    elif isinstance(h, collections.Iterable):
+      return type(h)(map(no_unicode, h))
+    else:
+      return h
