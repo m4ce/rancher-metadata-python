@@ -222,7 +222,7 @@ class MetadataAPI:
   def get_host_name(self, host_name = None):
     return self.get_host_field("name", host_name)
 
-  def no_unicode(h):
+  def no_unicode(self, h):
     if isinstance(h, basestring):
       return str(h)
     elif isinstance(h, dict):
