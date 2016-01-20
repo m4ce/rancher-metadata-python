@@ -7,6 +7,7 @@
 import requests
 import json
 import time
+import collections
 import re
 
 class MetadataAPI:
@@ -24,6 +25,16 @@ class MetadataAPI:
     else:
       self.max_attempts = 3
 
+  def hash_unicode2string(data):
+    if isinstance(data, basestring):
+      return str(data)
+    elif isinstance(data, dict):
+      return dict(map(unicode2hash, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+      return type(data)(map(unicode2hash, data))
+    else:
+      return data
+
   def is_error(self, data):
     if isinstance(data, dict):
       if 'code' in data and data['code'] == 404:
@@ -38,7 +49,7 @@ class MetadataAPI:
     while (i <= self.max_attempts and not success):
       for url in self.api_url:
         try:
-          req = requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json()
+          req = hash_unicode2string(requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json())
           success = True
           break
         except Exception as e:
