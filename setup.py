@@ -6,7 +6,7 @@ setup(
   name = 'rancher_metadata',
   packages = ['rancher_metadata'],
   version = version,
-  description = 'Rancher Metadata Python API',
+  description = 'Python library for Rancher Metadata API',
   author = 'Matteo Cerutti',
   author_email = 'matteo.cerutti@hotmail.co.uk',
   url = 'https://github.com/m4ce/python-rancher_metadata',
