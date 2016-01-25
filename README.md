@@ -1,5 +1,5 @@
-# Rancher Metadata Python API
-This is a simple Python API that allows to interact with the Rancher Metadata REST API.
+# Python library for Rancher Metadata API
+This is a simple Python library that allows to interact with the Rancher Metadata REST API.
 
 Pull requests to add additional API features (as documented at http://docs.rancher.com/rancher/metadata-service/) are very welcome. I only implemented what I needed.
 
