@@ -120,7 +120,7 @@ class MetadataAPI:
       for container_name in list(set(new) - set(old)):
         # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
         if 'service_suffix' not in container[container_name]:
-          container[container_name]['service_suffix'] = self.get_container_service_suffix(container_name)
+          containers[container_name]['service_suffix'] = self.get_container_service_suffix(container_name)
 
         yield (container_name, containers[container_name])
 
