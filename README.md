@@ -29,7 +29,7 @@ for name, container in containers:
 metadata = api.get_service_metadata()
 print(metadata)
 
-print("Service scale size: %s" % api.get_service_scale_size())
+print("Service scale size: %d" % api.get_service_scale_size())
 ```
 
 Look up all containers:
