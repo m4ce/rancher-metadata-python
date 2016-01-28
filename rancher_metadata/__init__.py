@@ -91,17 +91,16 @@ class MetadataAPI:
     return self.get_service_field("scale", **kwargs)
 
   def get_service_containers(self, **kwargs):
-    ret = {}
+    containers = {}
 
-    containers = self.get_service_field("containers", **kwargs)
-    for container in containers:
-      ret[container['name']] = container
+    for container in self.get_service_field("containers", **kwargs):
+      containers[container['name']] = container
 
       # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
       if 'service_suffix' not in container:
-        ret[container['name']]['service_suffix'] = self.get_container_service_suffix(container['name'])
+        containers[container['name']]['service_suffix'] = self.get_container_service_suffix(container['name'])
 
-    return ret
+    return containers
 
   def get_service_metadata(self, **kwargs):
     return self.get_service_field("metadata", **kwargs)
@@ -117,12 +116,12 @@ class MetadataAPI:
       containers = self.get_service_containers(**kwargs)
       new = containers.keys()
 
-      for container_name in list(set(new) - set(old)):
+      for name in list(set(new) - set(old)):
         # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
-        if 'service_suffix' not in container[container_name]:
-          containers[container_name]['service_suffix'] = self.get_container_service_suffix(container_name)
+        if 'service_suffix' not in containers[name]:
+          containers[name]['service_suffix'] = self.get_container_service_suffix(name)
 
-        yield (container_name, containers[container_name])
+        yield (name, containers[name])
 
       old = new
 
@@ -158,7 +157,7 @@ class MetadataAPI:
       container = self.api_get("/containers/%s" % container_name)
 
     # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
-    if 'service_suffix' not in container:
+    if container and 'service_suffix' not in container:
       container['service_suffix'] = self.get_container_service_suffix(container_name)
 
     return container
