@@ -1,6 +1,6 @@
 from distutils.core import setup
 
-version = '0.17.7'
+version = '0.17.8'
 
 setup(
   name = 'rancher-metadata',
