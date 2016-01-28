@@ -24,7 +24,7 @@ print("Container hostname: %s" % api.get_container_hostname())
 
 containers = api.wait_service_containers()
 for name, container in containers:
-  print("Container %s is up (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], api.get_container_service_suffix(name)))
+  print("Container %s is up (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 
 metadata = api.get_service_metadata()
 print(metadata)
