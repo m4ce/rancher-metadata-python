@@ -97,6 +97,10 @@ class MetadataAPI:
     for container in containers:
       ret[container['name']] = container
 
+      # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
+      if 'service_suffix' not in container:
+        ret[container['name']]['service_suffix'] = self.get_container_service_suffix(container['name'])
+
     return ret
 
   def get_service_metadata(self, **kwargs):
@@ -113,8 +117,12 @@ class MetadataAPI:
       containers = self.get_service_containers(**kwargs)
       new = containers.keys()
 
-      for n in list(set(new) - set(old)):
-        yield (n, containers[n])
+      for container_name in list(set(new) - set(old)):
+        # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
+        if 'service_suffix' not in container[container_name]:
+          container[container_name]['service_suffix'] = self.get_container_service_suffix(container_name)
+
+        yield (container_name, containers[container_name])
 
       old = new
 
