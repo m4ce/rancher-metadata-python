@@ -13,7 +13,7 @@ pip install rancher_metadata
 ## Usage
 ```
 from rancher_metadata import MetadataAPI
-metadata_api = MetadataAPI(api_url = "http://rancher-metadata/2015-07-25")
+metadata_api = MetadataAPI(api_url = "http://rancher-metadata/2015-12-19")
 
 print("Container ID: %d" % metadata_api.get_container_id())
 print("Container Service ID: %d" % metadata_api.get_container_service_id())
@@ -23,8 +23,8 @@ print("Container Service Name: %s" % metadata_api.get_container_service_name())
 print("Container Hostname: %s" % metadata_api.get_container_hostname())
 
 containers = metadata_api.wait_service_containers()
-for container in containers:
-  print("Container %s is up  (IP: %s, Index: %d)" %s (container, metadata_api.get_container_ip(container), metadata_api.get_container_id(container)))
+for name, container in containers:
+  print("Container %s is up  (IP: %s, Index: %d)" % (name, container['primary_ip'], container['create_index']))
 
 metadata = metadata_api.get_service_metadata()
 print(metadata)

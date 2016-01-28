@@ -1,7 +1,7 @@
 #
 # __init__.py
 #
-# Author: Matteo Cerutti <matteo.cerutti@hotmail.co.uk>
+# Author: Matteo Cerutti <matteo.cerutti@swisscom.com>
 #
 
 import requests
@@ -13,12 +13,16 @@ import re
 class MetadataAPI:
   def __init__(self, **kwargs):
     if 'api_url' not in kwargs:
-      self.api_url = ["http://rancher-metadata/2015-07-25"]
+      self.api_url = ["http://rancher-metadata/2015-12-19"]
     else:
       if isinstance(kwargs['api_url'], list):
-        self.api_url = kwargs['api_url']
+        api_url = kwargs['api_url']
       else:
-        self.api_url = [kwargs['api_url']]
+        api_url = [kwargs['api_url']]
+
+      self.api_url = []
+      for url in api_url: 
+        self.api_url.append(url.rstrip('/'))
 
     if 'max_attempts' in kwargs:
       self.max_attempts = kwargs['max_attempts']
@@ -39,7 +43,7 @@ class MetadataAPI:
     while (i <= self.max_attempts and not success):
       for url in self.api_url:
         try:
-          req = requests.get(url + query, headers = {"Content-Type": "application/json", "Accept": "application/json"}).json()
+          req = requests.get("%s%s" % (url, query), headers = {"Content-Type": "application/json", "Accept": "application/json"}).json()
           data = self.no_unicode(req)
           success = True
           break
@@ -64,36 +68,36 @@ class MetadataAPI:
       return self.api_get("/self/service")
     else:
       if 'service_name' not in kwargs:
-        raise ValueError("Attribute 'service_name' is required")
+        raise ValueError("Must provide the service name")
 
       if 'stack_name' not in kwargs:
-        return self.api_get("/services/%s" % kwargs['service_name'])
+        return self.api_get("/self/stack/services/%s" % kwargs['service_name'])
       else:
-        for s in self.get_services():
-          if s['stack_name'] == kwargs['stack_name'] and s['name'] == kwargs['service_name']:
-            return s
+        return self.api_get("/stacks/%s/services/%s" % (kwargs['stack_name'], kwargs['service_name']))
 
   def get_service_field(self, field, **kwargs):
     if not kwargs:
       return self.api_get("/self/service/%s" % field)
     else:
       if 'service_name' not in kwargs:
-        raise ValueError("Attribute 'service_name' is required")
+        raise ValueError("Must provide service name")
 
       if 'stack_name' not in kwargs:
-        return self.api_get("/services/%s/%s" % (kwargs['service_name'], field))
+        return self.api_get("/self/stack/services/%s/%s" % (kwargs['service_name'], field))
       else:
-        s = self.get_service(**kwargs)
-        if s and field in s:
-          return s[field]
-        else:
-          return None
+        return self.api_get("/stacks/%s/services/%s/%s" % (kwargs['stack_name'], kwargs['service_name'], field))
 
   def get_service_scale_size(self, **kwargs):
     return self.get_service_field("scale", **kwargs)
 
   def get_service_containers(self, **kwargs):
-    return self.get_service_field("containers", **kwargs)
+    ret = {}
+
+    containers = self.get_service_field("containers", **kwargs)
+    for container in containers:
+      ret[container['name']] = container
+
+    return ret
 
   def get_service_metadata(self, **kwargs):
     return self.get_service_field("metadata", **kwargs)
@@ -103,17 +107,18 @@ class MetadataAPI:
 
   def wait_service_containers(self, **kwargs):
     scale = self.get_service_scale_size(**kwargs)
-    containers = []
 
+    old = []
     while True:
-      t = self.get_service_containers(**kwargs)
+      containers = self.get_service_containers(**kwargs)
+      new = containers.keys()
 
-      for n in list(set(t) - set(containers)):
-        yield n
+      for n in list(set(new) - set(old)):
+        yield (n, containers[n])
 
-      containers = t
+      old = new
 
-      if (len(containers) < scale):
+      if (len(new) < scale):
         time.sleep(0.5)
       else:
         break
@@ -126,6 +131,12 @@ class MetadataAPI:
       return self.api_get("/self/stack")
     else:
       return self.api_get("/stacks/%s" % stack_name)
+
+  def get_stack_services(self, stack_name = None):
+    if stack_name is None:
+      return self.api_get("/self/stack/services")
+    else:
+      return self.api_get("/stacks/%s/services" % stack_name)
 
   def get_containers(self):
     return self.api_get("/containers")
@@ -175,7 +186,7 @@ class MetadataAPI:
   def get_container_service_id(self, container_name = None):
     index = None
 
-    service_index = self.get_container_field("service_index", container_name)
+    service_index = self.get_container_field("service_suffix", container_name)
 
     # use the container name index as the unique service index
     if service_index is None:
