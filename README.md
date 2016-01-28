@@ -15,8 +15,8 @@ pip install rancher_metadata
 from rancher_metadata import MetadataAPI
 metadata_api = MetadataAPI(api_url = "http://rancher-metadata/2015-12-19")
 
-print("Container ID: %d" % metadata_api.get_container_id())
-print("Container Service ID: %d" % metadata_api.get_container_service_id())
+print("Container create index: %d" % metadata_api.get_container_create_index())
+print("Container service suffix: %d" % metadata_api.get_container_service_suffix())
 print("Container IP: %s" % metadata_api.get_container_ip())
 print("Container Name: %s" % metadata_api.get_container_name())
 print("Container Service Name: %s" % metadata_api.get_container_service_name())
@@ -24,7 +24,7 @@ print("Container Hostname: %s" % metadata_api.get_container_hostname())
 
 containers = metadata_api.wait_service_containers()
 for name, container in containers:
-  print("Container %s is up (IP: %s, Index: %d, Service ID: %d)" % (name, container['primary_ip'], container['create_index'], metadata_api.get_container_service_id(name)))
+  print("Container %s is up (IP: %s, Index: %d, Service ID: %d)" % (name, container['primary_ip'], container['create_index'], metadata_api.get_container_service_suffix(name)))
 
 metadata = metadata_api.get_service_metadata()
 print(metadata)

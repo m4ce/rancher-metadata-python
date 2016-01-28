@@ -154,6 +154,9 @@ class MetadataAPI:
       return self.api_get("/containers/%s/%s" % (container_name, field))
 
   def get_container_id(self, container_name = None):
+    self.get_container_create_index(container_name)
+
+  def get_container_create_index(self, container_name = None):
     i = self.get_container_field("create_index", container_name)
 
     if i:
@@ -184,6 +187,9 @@ class MetadataAPI:
     return self.get_container_field("hostname", container_name)
 
   def get_container_service_id(self, container_name = None):
+    return self.get_container_service_suffix(container_name)
+
+  def get_container_service_suffix(self, container_name = None):
     index = None
 
     service_index = self.get_container_field("service_suffix", container_name)
