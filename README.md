@@ -24,10 +24,84 @@ print("Container Hostname: %s" % metadata_api.get_container_hostname())
 
 containers = metadata_api.wait_service_containers()
 for name, container in containers:
-  print("Container %s is up  (IP: %s, Index: %d)" % (name, container['primary_ip'], container['create_index']))
+  print("Container %s is up (IP: %s, Index: %d, Service ID: %d)" % (name, container['primary_ip'], container['create_index'], metadata_api.get_container_service_id(name)))
 
 metadata = metadata_api.get_service_metadata()
 print(metadata)
+
+print("Service scale size: %s" % metadata_api.get_service_scale_size())
+```
+
+Other examples:
+
+```
+# look up all containers
+for container in metadata_api.get_containers():
+  print(container)
+
+# look up all services
+for service in metadata_api.get_services():
+  print(service)
+
+# look up all stacks
+for stack in metadata_api.get_stacks():
+  print(stack)
+
+# look up all hosts
+for host in metadata_api.get_hosts():
+  print(host)
+
+# look up current container
+print(metadata_api.get_container())
+
+# look up a container by name
+print(metadata_api.get_container("my_container"))
+
+# look up a container's IP by name
+print("A container IP: %s" % metadata_api.get_container_ip("container_name"))
+
+# look up current service
+print(metadata_api.get_service())
+
+# look up a specific service running in the current stack
+print(metadata_api.get_service(service_name = 'my_service'))
+
+# look up a specific service running in another stack
+print(metadata_api.get_service(service_name = 'my_service', stack_name = 'my_stack'))
+
+# look up a specific service's containers running in the current stack
+for container in metadata_api.get_service_containers(service_name = 'my_service'):
+  print(container)
+
+# look up a specific service's containers running in an another stack
+for container in metadata_api.get_service_containers(service_name = 'my_service', stack_name = 'my_stack'):
+  print(container)
+
+# look up current stack
+print(metadata_api.get_stack())
+
+# look up a specific stack by name
+print(metadata_api.get_stack("my_stack"))
+
+# look up services running in current stack
+for service in metadata_api.get_stack_services():
+  print(service)
+
+# look up services running in another stack
+for service in metadata_api.get_stack_services("my_stack"):
+  print(service)
+
+# look up current host
+print(metadata_api.get_host())
+
+# look up a specific host by name
+print(metadata_api.get_host("my_host"))
+
+# returns true if the container is running in Rancher-managed network
+if is_network_managed():
+  print("I am running in the managed network")
+else:
+  print("I am running in host-based networking")
 ```
 
 ## Contact
