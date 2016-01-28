@@ -7,7 +7,7 @@ Pull requests to add additional API features (as documented at http://docs.ranch
 To install it simply issue the following command:
 
 ```
-pip install rancher_metadata
+pip install rancher-metadata
 ```
 
 ## Usage
