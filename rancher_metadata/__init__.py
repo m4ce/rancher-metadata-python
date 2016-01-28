@@ -169,7 +169,7 @@ class MetadataAPI:
       return self.api_get("/containers/%s/%s" % (container_name, field))
 
   def get_container_id(self, container_name = None):
-    self.get_container_create_index(container_name)
+    return self.get_container_create_index(container_name)
 
   def get_container_create_index(self, container_name = None):
     i = self.get_container_field("create_index", container_name)
@@ -226,7 +226,7 @@ class MetadataAPI:
   def is_network_managed(self):
     # in managed network, we don't get to see any information about the container :(
 
-    if self.get_container_id():
+    if self.get_container_create_index():
       return True
     else:
       return False
