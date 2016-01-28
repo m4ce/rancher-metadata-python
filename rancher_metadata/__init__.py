@@ -142,10 +142,18 @@ class MetadataAPI:
     return self.api_get("/containers")
 
   def get_container(self, container_name = None):
+    container = None
+
     if container_name is None:
-      return self.api_get("/self/container")
+      container = self.api_get("/self/container")
     else:
-      return self.api_get("/containers/%s" % container_name)
+      container = self.api_get("/containers/%s" % container_name)
+
+    # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
+    if 'service_suffix' not in container:
+      container['service_suffix'] = self.get_container_service_suffix(container_name)
+
+    return container
 
   def get_container_field(self, field, container_name):
     if container_name is None:
@@ -167,6 +175,7 @@ class MetadataAPI:
   def get_container_ip(self, container_name = None):
     if container_name is None:
       # are we running within the rancher managed network?
+      # FIXME: https://github.com/rancher/rancher/issues/2750
       if self.is_network_managed():
         return self.api_get("/self/container/primary_ip")
       else:
