@@ -22,8 +22,7 @@ print("Container name: %s" % api.get_container_name())
 print("Container service name: %s" % api.get_container_service_name())
 print("Container hostname: %s" % api.get_container_hostname())
 
-containers = api.wait_service_containers()
-for name, container in containers:
+for name, container in api.wait_service_containers():
   print("Container %s is up (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 
 metadata = api.get_service_metadata()
@@ -86,16 +85,22 @@ Look up a specific service running in another stack:
 print(api.get_service(service_name = 'my_service', stack_name = 'my_stack'))
 ```
 
+look up the current service containers
+```
+for name, container in api.get_service_containers():
+  print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
+```
+
 look up a specific service's containers running in the current stack:
 ```
-for container in api.get_service_containers(service_name = 'my_service'):
-  print(container)
+for name, container in api.get_service_containers(service_name = 'my_service'):
+  print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 ```
 
 Look up a specific service's containers running in an another stack:
 ```
-for container in api.get_service_containers(service_name = 'my_service', stack_name = 'my_stack'):
-  print(container)
+for name, container in api.get_service_containers(service_name = 'my_service', stack_name = 'my_stack'):
+  print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 ```
 
 Look up current stack:
