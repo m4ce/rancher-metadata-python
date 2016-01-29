@@ -85,21 +85,21 @@ Look up a specific service running in another stack:
 print(api.get_service(service_name = 'my_service', stack_name = 'my_stack'))
 ```
 
-look up the current service containers
+Look up the current service containers
 ```
-for name, container in api.get_service_containers():
+for name, container in api.get_service_containers().iteritems():
   print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 ```
 
-look up a specific service's containers running in the current stack:
+Look up a specific service's containers running in the current stack:
 ```
-for name, container in api.get_service_containers(service_name = 'my_service'):
+for name, container in api.get_service_containers(service_name = 'my_service').iteritems():
   print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 ```
 
 Look up a specific service's containers running in an another stack:
 ```
-for name, container in api.get_service_containers(service_name = 'my_service', stack_name = 'my_stack'):
+for name, container in api.get_service_containers(service_name = 'my_service', stack_name = 'my_stack').iteritems():
   print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
 ```
 
