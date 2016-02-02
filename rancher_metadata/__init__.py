@@ -96,10 +96,6 @@ class MetadataAPI:
     for container in self.get_service_field("containers", **kwargs):
       containers[container['name']] = container
 
-      # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
-      if 'service_suffix' not in container:
-        containers[container['name']]['service_suffix'] = self.get_container_service_suffix(container['name'])
-
     return containers
 
   def get_service_metadata(self, **kwargs):
@@ -117,10 +113,6 @@ class MetadataAPI:
       new = containers.keys()
 
       for name in list(set(new) - set(old)):
-        # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
-        if 'service_suffix' not in containers[name]:
-          containers[name]['service_suffix'] = self.get_container_service_suffix(name)
-
         yield (name, containers[name])
 
       old = new
@@ -156,10 +148,6 @@ class MetadataAPI:
     else:
       container = self.api_get("/containers/%s" % container_name)
 
-    # FIXME: until https://github.com/rancher/cattle/pull/1197 gets merged
-    if container and 'service_suffix' not in container:
-      container['service_suffix'] = self.get_container_service_suffix(container_name)
-
     return container
 
   def get_container_field(self, field, container_name):
@@ -167,9 +155,6 @@ class MetadataAPI:
       return self.api_get("/self/container/%s" % field)
     else:
       return self.api_get("/containers/%s/%s" % (container_name, field))
-
-  def get_container_id(self, container_name = None):
-    return self.get_container_create_index(container_name)
 
   def get_container_create_index(self, container_name = None):
     i = self.get_container_field("create_index", container_name)
@@ -202,23 +187,13 @@ class MetadataAPI:
   def get_container_hostname(self, container_name = None):
     return self.get_container_field("hostname", container_name)
 
-  def get_container_service_id(self, container_name = None):
-    return self.get_container_service_suffix(container_name)
+  def get_container_service_index(self, container_name = None):
+    i = self.get_container_field("service_index", container_name)
 
-  def get_container_service_suffix(self, container_name = None):
-    index = None
-
-    service_index = self.get_container_field("service_suffix", container_name)
-
-    # use the container name index as the unique service index
-    if service_index is None:
-      m = re.search("(\d+)$", self.get_container_name(container_name))
-      if m:
-        index = int(m.group(1))
+    if i:
+      return int(i)
     else:
-      index = int(service_index)
-
-    return index
+      return None
 
   def get_container_host_uuid(self, container_name = None):
     return self.get_container_field("host_uuid", container_name)
