@@ -94,6 +94,12 @@ class MetadataAPI:
     containers = {}
 
     for container in self.get_service_field("containers", **kwargs):
+      if 'create_index' in container and isinstance(container['create_index'], basestring):
+        container['create_index'] = int(container['create_index'])
+
+      if 'service_index' in container and isinstance(container['service_index'], basestring):
+        container['service_index'] = int(container['service_index'])
+
       containers[container['name']] = container
 
     return containers
@@ -138,7 +144,18 @@ class MetadataAPI:
       return self.api_get("/stacks/%s/services" % stack_name)
 
   def get_containers(self):
-    return self.api_get("/containers")
+    containers = []
+
+    for container in self.api_get("/containers"):
+      if 'create_index' in container and isinstance(container['create_index'], basestring):
+        container['create_index'] = int(container['create_index'])
+
+      if 'service_index' in container and isinstance(container['service_index'], basestring):
+        container['service_index'] = int(container['service_index'])
+
+      containers.append(container)
+
+    return containers
 
   def get_container(self, container_name = None):
     container = None
