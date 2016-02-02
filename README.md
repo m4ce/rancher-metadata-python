@@ -16,14 +16,14 @@ from rancher_metadata import MetadataAPI
 api = MetadataAPI(api_url = "http://rancher-metadata/2015-12-19")
 
 print("Container create index: %d" % api.get_container_create_index())
-print("Container service suffix: %d" % api.get_container_service_suffix())
+print("Container service index: %d" % api.get_container_service_index())
 print("Container ip: %s" % api.get_container_ip())
 print("Container name: %s" % api.get_container_name())
 print("Container service name: %s" % api.get_container_service_name())
 print("Container hostname: %s" % api.get_container_hostname())
 
 for name, container in api.wait_service_containers():
-  print("Container %s is up (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
+  print("Container %s is up (ip: %s, create index: %d, service index: %d)" % (name, container['primary_ip'], container['create_index'], container['service_index']))
 
 metadata = api.get_service_metadata()
 print(metadata)
@@ -88,19 +88,19 @@ print(api.get_service(service_name = 'my_service', stack_name = 'my_stack'))
 Look up the current service containers
 ```
 for name, container in api.get_service_containers().iteritems():
-  print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
+  print("Container %s (ip: %s, create index: %d, service index: %d)" % (name, container['primary_ip'], container['create_index'], container['service_index]))
 ```
 
 Look up a specific service's containers running in the current stack:
 ```
 for name, container in api.get_service_containers(service_name = 'my_service').iteritems():
-  print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
+  print("Container %s (ip: %s, create index: %d, service index: %d)" % (name, container['primary_ip'], container['create_index'], container['service_index']))
 ```
 
 Look up a specific service's containers running in an another stack:
 ```
 for name, container in api.get_service_containers(service_name = 'my_service', stack_name = 'my_stack').iteritems():
-  print("Container %s (ip: %s, create index: %d, service suffix: %d)" % (name, container['primary_ip'], container['create_index'], container['service_suffix']))
+  print("Container %s (ip: %s, create index: %d, service index: %d)" % (name, container['primary_ip'], container['create_index'], container['service_index']))
 ```
 
 Look up current stack:
