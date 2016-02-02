@@ -165,6 +165,12 @@ class MetadataAPI:
     else:
       container = self.api_get("/containers/%s" % container_name)
 
+    if 'create_index' in container and isinstance(container['create_index'], basestring):
+      container['create_index'] = int(container['create_index'])
+
+    if 'service_index' in container and isinstance(container['service_index'], basestring):
+      container['service_index'] = int(container['service_index'])
+
     return container
 
   def get_container_field(self, field, container_name):
