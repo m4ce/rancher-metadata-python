@@ -258,7 +258,7 @@ class MetadataAPI:
     if isinstance(h, str):
       return str(h)
     elif isinstance(h, dict):
-      return dict(map(self.no_unicode, h.iteritems()))
+      return dict(map(self.no_unicode, h.items()))
     elif isinstance(h, collections.Iterable):
       return type(h)(map(self.no_unicode, h))
     else:
