@@ -13,5 +13,5 @@ setup(
   download_url = 'https://github.com/m4ce/rancher-metadata-python/tarball/%s' % (version,),
   keywords = ['rancher'],
   classifiers = [],
-  install_requires = ["requests"]
+  install_requires = ["requests", "six", "future"]
 )

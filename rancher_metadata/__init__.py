@@ -9,6 +9,7 @@ import json
 import time
 import collections
 import re
+from builtins import str
 
 class MetadataAPI:
   def __init__(self, **kwargs):
@@ -94,10 +95,10 @@ class MetadataAPI:
     containers = {}
 
     for container in self.get_service_field("containers", **kwargs):
-      if 'create_index' in container and isinstance(container['create_index'], basestring):
+      if 'create_index' in container and isinstance(container['create_index'], str):
         container['create_index'] = int(container['create_index'])
 
-      if 'service_index' in container and isinstance(container['service_index'], basestring):
+      if 'service_index' in container and isinstance(container['service_index'], str):
         container['service_index'] = int(container['service_index'])
 
       containers[container['name']] = container
@@ -147,10 +148,10 @@ class MetadataAPI:
     containers = []
 
     for container in self.api_get("/containers"):
-      if 'create_index' in container and isinstance(container['create_index'], basestring):
+      if 'create_index' in container and isinstance(container['create_index'], str):
         container['create_index'] = int(container['create_index'])
 
-      if 'service_index' in container and isinstance(container['service_index'], basestring):
+      if 'service_index' in container and isinstance(container['service_index'], str):
         container['service_index'] = int(container['service_index'])
 
       containers.append(container)
@@ -165,10 +166,10 @@ class MetadataAPI:
     else:
       container = self.api_get("/containers/%s" % container_name)
 
-    if 'create_index' in container and isinstance(container['create_index'], basestring):
+    if 'create_index' in container and isinstance(container['create_index'], str):
       container['create_index'] = int(container['create_index'])
 
-    if 'service_index' in container and isinstance(container['service_index'], basestring):
+    if 'service_index' in container and isinstance(container['service_index'], str):
       container['service_index'] = int(container['service_index'])
 
     return container
@@ -254,7 +255,7 @@ class MetadataAPI:
     return self.get_host_field("name", host_name)
 
   def no_unicode(self, h):
-    if isinstance(h, basestring):
+    if isinstance(h, str):
       return str(h)
     elif isinstance(h, dict):
       return dict(map(self.no_unicode, h.iteritems()))
